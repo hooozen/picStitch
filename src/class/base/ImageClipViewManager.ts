@@ -1,10 +1,12 @@
 import ImageClipView from "./ImageClipView";
 
 export default class ImageViewManager {
-  images: HTMLImageElement[]
-  views: { [id: number]: ImageClipView }
-  viewCnt: number
-  inited: boolean
+  images: HTMLImageElement[];
+  views: { [id: number]: ImageClipView };
+  viewCnt: number;
+  inited: boolean;
+
+  static instance: ImageViewManager | null = null;
 
   constructor() {
     this.images = [];
@@ -13,24 +15,36 @@ export default class ImageViewManager {
     this.inited = false;
   }
 
+  static getInstance(): ImageViewManager {
+    if (this.instance !== null) {
+      return this.instance;
+    }
+    this.instance = new ImageViewManager();
+    return this.instance;
+  }
+
   initViews(urls: string[]) {
     return Promise.all(
-      urls.map(url => new Promise<HTMLImageElement>((resolve, _) => {
-        const image = new Image();
-        image.src = url;
-        // image.onload = () => resolve(image);
-        image.addEventListener('load', () => resolve(image));
-      }))).then(images => {
-        this.inited = true;
-        this.images = images;
-        return this.generateClipViews();
-      });
+      urls.map(
+        (url) =>
+          new Promise<HTMLImageElement>((resolve, _) => {
+            const image = new Image();
+            image.src = url;
+            // image.onload = () => resolve(image);
+            image.addEventListener("load", () => resolve(image));
+          })
+      )
+    ).then((images) => {
+      this.inited = true;
+      this.images = images;
+      return this.generateClipViews();
+    });
   }
 
   generateClipViews(): ImageClipView[] {
-    this.viewCnt = 0
-    this.views = {}
-    return this.images.map(img => {
+    this.viewCnt = 0;
+    this.views = {};
+    return this.images.map((img) => {
       const view = new ImageClipView(img, this.viewCnt);
       this.views[this.viewCnt++] = view;
       return view;
@@ -38,7 +52,7 @@ export default class ImageViewManager {
   }
 
   copyImageView(...viewIDs: number[]): ImageClipView[] {
-    return viewIDs.map(id => {
+    return viewIDs.map((id) => {
       const parent = this.views[id];
       const child = new ImageClipView(parent.image, this.viewCnt, parent);
       child.setCoordinate(...parent.getCoordinate());

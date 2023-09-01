@@ -1,10 +1,9 @@
 import ImageClipView from "../base/ImageClipView";
 import JointCanvas from "../base/JointCanvas";
 
-
 export default class Editor {
-  canvas: JointCanvas
-  imageViews: ImageClipView[]
+  canvas: JointCanvas;
+  imageViews: ImageClipView[];
 
   constructor(canvasEl: HTMLCanvasElement) {
     this.canvas = new JointCanvas(canvasEl);
@@ -26,6 +25,6 @@ export default class Editor {
   }
 
   save() {
-    this.imageViews.forEach(view => view.applyToParent());
+    this.imageViews.forEach((view) => view.applyToParent());
   }
 }

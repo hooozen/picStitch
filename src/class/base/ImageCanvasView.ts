@@ -1,20 +1,28 @@
 import ImageClipView from "./ImageClipView";
 
-
-type CanvasDrawArgs = [HTMLImageElement, number, number, number, number, number, number, number, number]
+type CanvasDrawArgs = [
+  HTMLImageElement,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number
+];
 
 export default class ImageCanvasView {
-
-  clipView: ImageClipView
-  width: number
-  offsetY: number
-  offsetX: number
+  clipView: ImageClipView;
+  width: number;
+  offsetY: number;
+  offsetX: number;
 
   constructor(clipView: ImageClipView) {
     this.clipView = clipView;
     this.width = this.clipView.width;
     this.offsetY = 0;
-    this.offsetX = 0
+    this.offsetX = 0;
   }
 
   setWidth(width: number) {
@@ -49,8 +57,10 @@ export default class ImageCanvasView {
     return [
       this.clipView.image,
       ...this.clipView.getClipCanvasArgs(),
-      this.offsetX, this.offsetY,
-      this.width, this.height
+      this.offsetX,
+      this.offsetY,
+      this.width,
+      this.height,
     ];
   }
-};
+}

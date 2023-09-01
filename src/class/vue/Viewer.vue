@@ -51,7 +51,7 @@ function edit(ids: [number, number]) {
 }
 
 function update() {
-  canvas.draw()
+  canvas.update()
   setImageSeparators()
 }
 
@@ -66,7 +66,7 @@ defineExpose({ update, save })
 <style>
 .viewer-canvas-outer {
   margin: 20px auto;
-  width: 600px;
+  max-width: 600px;
   position: relative;
 }
 
