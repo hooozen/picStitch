@@ -1,6 +1,14 @@
 <template>
   <div class="head">
-    <div class="app-name">picStitch<span class="app-desc">长图拼接工具</span></div>
+    <div class="brand">
+      <div class="app-logo">
+        <img src="/public/icon.svg">
+      </div>
+      <div class="app-name">
+        <div>picStitch</div>
+        <div class="app-desc">长图拼接工具</div>
+      </div>
+    </div>
     <div class="head__btns">
       <template v-if="workStatus">
         <div class="btn btn-normal" @click="workStatus = false">返回</div>
@@ -54,13 +62,19 @@ function save() {
   workRef.value.save()
 }
 
+window.addEventListener('beforeunload', e => {
+  if (!imageClipViews.value.length) return
+  e.preventDefault()
+  e.returnValue = ''
+})
+
 </script>
 
 <style>
 .head {
   display: flex;
   align-items: center;
-  padding: 0 20px;
+  padding: 0 10px;
   border-bottom: 1px solid #bfbfbf;
   background: #f7f7f7;
   box-sizing: border-box;
@@ -72,10 +86,25 @@ function save() {
   display: flex;
 }
 
+.brand {
+  display: flex;
+  height: 100%;
+  align-items: center;
+}
+
+.app-logo {
+  height: 100%;
+}
+
+.app-logo img {
+  height: 100%;
+  object-fit: contain;
+}
+
 .app-name {
-  font-size: 1.75rem;
   font-weight: bold;
   display: flex;
+  align-items: center;
   flex-direction: column;
 }
 

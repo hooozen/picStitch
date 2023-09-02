@@ -56,7 +56,7 @@ import { useResizeObserver } from '@vueuse/core'
 import ImageViewManager from './class/base/ImageClipViewManager';
 import Tip from './components/Tip'
 
-import type { Ref } from 'vue';
+import type { ComputedRef, Ref } from 'vue';
 
 /** image file manager */
 type ImageOuter = {
@@ -160,6 +160,8 @@ const deleteAreaDisplay = computed(() => isDraging.value ? 'flex' : 'none')
 const draggingItemDynamicOrder = ref<number>(0)
 
 function dragStart(e: MouseEvent | Touch, image: ImageOuter) {
+  _initGrid()
+  _updateAddPosition()
   isDraging.value = true
   draggingImage = image
   _updateStyle()
@@ -286,14 +288,16 @@ function _updateAddPosition() {
 /** touchscreen device */
 const isTouchDevice: boolean = 'ontouchstart' in window
 let touchStartTranslate: [number, number] = [0, 0]
+let activeTouch: Ref<Touch | null> = ref(null)
 
 if (isTouchDevice) {
   document.addEventListener('touchmove', touchMove)
-  document.addEventListener('touchend', dragend)
-  document.addEventListener('touchcancel', dragend)
+  document.addEventListener('touchend', touchEnd)
+  document.addEventListener('touchcancel', touchEnd)
 }
 
 function touchStart(e: TouchEvent, image: ImageOuter) {
+  activeTouch.value = e.touches[0]
   dragStart(e.touches[0], image)
   touchStartTranslate = [image.translateX, image.translateY]
 }
@@ -301,9 +305,20 @@ function touchStart(e: TouchEvent, image: ImageOuter) {
 function touchMove(e: TouchEvent) {
   if (!isDraging.value) return
   const touch = e.touches[0]
+  activeTouch.value = touch
   draggingImage.translateX = touchStartTranslate[0] + touch.clientX - dragginStartPoint[0]
   draggingImage.translateY = touchStartTranslate[1] + touch.clientY - dragginStartPoint[1]
   _updateImageOrder(touch)
+}
+
+const moveOnDelete: ComputedRef<boolean> =
+  computed(() => document.documentElement.clientHeight - activeTouch.value!.clientY < 60)
+
+function touchEnd() {
+  if (!isDraging.value) return
+  if (moveOnDelete.value) removeImage()
+  activeTouch.value = null
+  dragend()
 }
 
 
@@ -327,6 +342,7 @@ function touchMove(e: TouchEvent) {
   height: 60px;
   background-color: var(--active-color);
   border-radius: 50%;
+  box-shadow: 1px 2px 12px 2px rgba(0, 0, 0, 0.3), 1px 2px 6px 1px rgba(0, 0, 0, 0.4)
 }
 
 .next-step .icon {
@@ -439,10 +455,11 @@ function touchMove(e: TouchEvent) {
   box-sizing: border-box;
   color: #fff;
   display: flex;
+  height: 60px;
   justify-content: center;
   left: 0;
   margin: 0 auto;
-  padding: 16px 32px;
+  padding: 0 32px;
   position: fixed;
   right: 0;
   transition: 200ms ease-in;

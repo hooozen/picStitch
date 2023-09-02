@@ -1,18 +1,18 @@
-# Vue 3 + TypeScript + Vite
+<h1> <div align="center"><img align="center" height="40" src="resource/logo.svg"/>picStitch</div></h1>
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+<p align="center">picStitch 是一款小巧易用的长图拼接 Web App</p>
 
-## Recommended IDE Setup
+* Web APP:
+* 微信小程序: picStitch (开发中)
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+🎶 picStitch 没有后台服务器，加载完毕后离线可用.  不必担心数据安全和隐私问题.
 
-## Type Support For `.vue` Imports in TS
+picStitch 是为了解决手机系统图库不支持图片拼接，以及部分手机 (例如 iPhone，截止到 2023.9.2) 不支持长截屏.  同时第三方拼图软件过于臃肿或者广告较多的问题.
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+主要的使用场景有以下几种：
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
+### 多图拼接
 
-1. Disable the built-in TypeScript Extension
-   1. Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-   2. Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+### 长截屏拼接
+
+### 影视台词拼接

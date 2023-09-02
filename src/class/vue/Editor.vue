@@ -14,8 +14,11 @@
           </div>
         </div>
         <div class="modal__body">
-          <canvas id="stitchCanvas" width="600" ref="canvasEl" @mousedown="mouseDownHandler"
-            @mouseleave="mouseDown = false" @mouseup="mouseDown = false" @mousemove="mouseMoveHandler"></canvas>
+          <canvas id="stitchCanvas" width="600" ref="canvasEl" @mousedown="mouseDownHandler" @mousemove="mouseMoveHandler"
+            @mouseleave="mouseDown = false" @mouseup="mouseDown = false" @touchstart.prevent="touchStartHandler"
+            @touchmove.prevent="touchMoveHandler" @touchend.prevent="mouseDown = false"
+            @touchcancel.prevent="mouseDown = false">
+          </canvas>
         </div>
         <div class="modal__foot">
           <div class="btn-wraps">
@@ -68,6 +71,26 @@ function confirm() {
   console.log(imageClipViews.value)
   imageClipViews.value.forEach(view => view.applyToParent())
   emits('confirm')
+}
+
+let touchStartClientY = 0
+let lastTouchClientY = 0
+
+function touchStartHandler(e: TouchEvent) {
+  mouseDown = true
+  const target = e.target as HTMLCanvasElement
+  touchStartClientY = e.touches[0].clientY
+  mouseStartY = touchStartClientY - target.getBoundingClientRect().y
+  lastTouchClientY = touchStartClientY
+}
+
+function touchMoveHandler(e: TouchEvent) {
+  if (!mouseDown) return
+  const touch = e.touches[0]
+  const movementY = touch.clientY - lastTouchClientY
+  lastTouchClientY = touch.clientY
+  if (movementY === 0) return
+  canvas.dragImage(mouseStartY, movementY);
 }
 
 </script>
