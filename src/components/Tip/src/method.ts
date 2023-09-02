@@ -61,7 +61,7 @@ const closeTip = (instance: TipContext) => {
 
 const tip: TipFn & { _context: AppContext | null } = (
   options = {},
-  context: AppContext
+  context?: AppContext
 ) => {
   if (instances.length >= TIP_MAX) {
     return { close: () => undefined };

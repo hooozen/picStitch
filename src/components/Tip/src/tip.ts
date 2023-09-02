@@ -1,23 +1,23 @@
-import { AppContext } from "vue"
+import { AppContext } from "vue";
 
 export interface TipPropsType {
-  id: string,
-  text: string
-  duration: number
-  offset?: number
+  id: string;
+  text: string;
+  duration: number;
+  offset?: number;
 }
 
 export const tipDefaults = {
   duration: 3000,
-  id: '',
-  text: '',
+  id: "",
+  text: "",
   offset: 16,
-}
+};
 
 export interface TipHandler {
-  close: () => void
+  close: () => void;
 }
 
 export type TipFn = {
-  (options?: any, context?: null | AppContext): TipHandler
-}
+  (options?: any, context?: AppContext): TipHandler;
+};

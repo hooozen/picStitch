@@ -28,6 +28,9 @@
     "src/**/*.tsx",
     "src/**/*.vue"
   ],
+  "exclude": [
+    "src/class/native"
+  ],
   "references": [
     {
       "path": "./tsconfig.node.json"

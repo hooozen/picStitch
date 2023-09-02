@@ -4,6 +4,7 @@ const manifest: Partial<ManifestOptions> = {
   name: "picStitch-长图拼接",
   short_name: "picStitch",
   start_url: ".",
+  background_color: "#fff",
   display: "standalone",
   icons: [
     {
