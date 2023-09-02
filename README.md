@@ -21,8 +21,6 @@ picStitch 通过对图片的排序、拼接和裁剪图片连接处应用于以�
 
 ### 长截屏拼接
 
-<img src="./resource/doc/userCase2.jpg">
-
 <img src="resource/doc/userCase2.gif">
 
 通过裁剪图片的边界使截屏完美拼接
