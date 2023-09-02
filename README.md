@@ -1,4 +1,4 @@
-<h1> <div align="center"><img align="center" height="40" src="resource/logo.svg"/>picStitch</div></h1>
+<h1> <div align="center"><img align="center" height="40" src="resource/doc/logo.svg"/>picStitch</div></h1>
 
 <p align="center">picStitch 是一款小巧易用的长图拼接 Web App</p>
 
@@ -13,21 +13,24 @@ picStitch 通过对图片的排序、拼接和裁剪图片连接处应用于以�
 
 ### 多图拼接
 
-![userCase1](resource/doc/userCase1.jpg)
-![userCase1](resource/doc/userCase1.gif)
+<img src="./resource/doc/userCase1.jpg">
+
+<img src="resource/doc/userCase1.gif">
 
 发朋友圈是一个典型场景
 
 ### 长截屏拼接
 
-![userCase1](resource/doc/userCase2.jpg)
-![userCase1](resource/doc/userCase2.gif)
+<img src="./resource/doc/userCase2.jpg">
+
+<img src="resource/doc/userCase2.gif">
 
 通过裁剪图片的边界使截屏完美拼接
 
-![userCase1](resource/doc/userCase3.jpg)
-![userCase1](resource/doc/userCase3.gif)
-
 ### 影视台词拼接
+
+<img src="./resource/doc/userCase3.jpg">
+
+<img src="resource/doc/userCase3.gif">
 
 💡为了最大限度的保证图片质量，拼接过程中不会对图片进行任何压缩. 保存时也尽可能保持最大的尺寸，因此在处理超大图片时可能会略有卡顿.
