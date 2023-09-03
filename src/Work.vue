@@ -66,11 +66,11 @@ function edit(ids: [number, number]) {
   })
 }
 
-const viewer = ref()
+const viewer = ref<typeof Viewer>()
 
 function confirmEdit() {
   isShowEditor.value = false
-  viewer.value.update()
+  viewer!.value!.update()
 }
 
 const saveEnabled = computed(() => imageClipViews.length > 0)
@@ -80,21 +80,16 @@ let loading: LoadingHandler
 function complete() {
   if (!saveEnabled.value) return
   loading = Loading({ text: '生成中' })
-  nextTick(() => {
-    resultURL.value = viewer.value.save()
+  viewer!.value!.save().then((blob: Blob) => {
+    resultURL.value = URL.createObjectURL(blob)
     isShowResult.value = true
   })
-  /*
-  resultImg.value!.onload = () => {
-    console.log('img load')
-  }
-  */
-  // resultImg.value!.src = resultURL.value
 }
 
 function resultLoad() {
   console.log('load')
   loading.close()
+  URL.revokeObjectURL(resultURL.value)
 }
 
 const isShowResult = ref<boolean>(false)

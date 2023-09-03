@@ -44,18 +44,14 @@ export default class PicStitchCanvas {
     });
   }
 
-  save() {
+  save(
+    type: string = "image/png",
+    quality: number = 0.9
+  ): Promise<Blob | null> | void {
     if (this.ctx === null) return console.warn("init is required before save!");
-    const url = this.canvas!.toDataURL("image/png");
-    return url;
-    /*
-    const a = document.createElement("A") as HTMLAnchorElement;
-    a.href = this.canvas!.toDataURL("image/png");
-    a.download = "picStitch";
-    document.body.append(a);
-    a.click();
-    a.remove();
-    */
+    return new Promise((resolve, _) => {
+      this.canvas!.toBlob(resolve, type, quality);
+    });
   }
 
   _setWidth() {
