@@ -11,24 +11,32 @@ picStitch 是为了解决手机系统图库不支持图片拼接，以及部分�
 
 picStitch 通过对图片的排序、拼接和裁剪图片连接处应用于以下场景：
 
-### 多图拼接
+#### 多图拼接
 
-<img src="./resource/doc/userCase1.jpg">
+<p align="center">
+<img width="300px" src="./resource/doc/userCase1.jpg">
+</p>
 
-<img src="resource/doc/userCase1.gif">
+#### 长截屏拼接
 
-发朋友圈是一个典型场景
-
-### 长截屏拼接
-
-<img src="resource/doc/userCase2.gif">
+<p align="center">
+<img width="300px" src="resource/doc/userCase2.jpg">
+</p>
 
 通过裁剪图片的边界使截屏完美拼接
 
-### 影视台词拼接
+#### 影视台词拼接
 
-<img src="./resource/doc/userCase3.jpg">
+<p align="center">
+<img width="300px" src="resource/doc/userCase3.jpg">
+</p>
 
-<img src="resource/doc/userCase3.gif">
+### 使用演示
+
+<p align="center">
+<img align="center" width="150px" src="resource/doc/userCase1.gif">
+<img align="center" width="150px" src="resource/doc/userCase2.gif">
+<img align="center" width="150px" src="resource/doc/userCase3.gif">
+</p>
 
 💡为了最大限度的保证图片质量，拼接过程中不会对图片进行任何压缩. 保存时也尽可能保持最大的尺寸，因此在处理超大图片时可能会略有卡顿.
