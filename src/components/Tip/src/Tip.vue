@@ -59,7 +59,7 @@ defineExpose({ visible, close, bottom })
 </script>
 
 
-<style>
+<style scoped>
 .ps-tip {
   display: flex;
   position: fixed;

@@ -46,12 +46,16 @@ export default class PicStitchCanvas {
 
   save() {
     if (this.ctx === null) return console.warn("init is required before save!");
+    const url = this.canvas!.toDataURL("image/png");
+    return url;
+    /*
     const a = document.createElement("A") as HTMLAnchorElement;
     a.href = this.canvas!.toDataURL("image/png");
     a.download = "picStitch";
     document.body.append(a);
     a.click();
     a.remove();
+    */
   }
 
   _setWidth() {

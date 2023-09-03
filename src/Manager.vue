@@ -1,8 +1,16 @@
 <template>
-  <div class="image-manager">
+  <div class="head">
+    <div class="head-left app-name">
+      picStitch
+    </div>
+    <div class="head-right">
+      <div :class="`btn${confirmDisabled ? ' btn--disabled' : ''}`" @click="toStitch">拼接</div>
+    </div>
+  </div>
+  <div class="body image-manager">
     <div class="image-list" ref="imageListEl">
       <div v-for="image in imageList" class="image-outer" :key="image.id"
-        :style="{ ...image.style, transform: `translate(${image.translateX}px, ${image.translateY}px)` }">
+        :style="{ ...image.style, transform: `translate(${image.translateX}px, ${image.translateY}px) scale(${image.isDraging ? '1.1' : '1'})` }">
         <img :src="image.url" @mousedown.stop.prevent="dragStart($event, image)"
           @touchstart.prevent.stop="touchStart($event, image)" />
         <div class="image-badge">{{ image.order + 1 }}</div>
@@ -20,13 +28,8 @@
         </label>
       </div>
     </div>
-    <div v-if="!confirmDisabled" class="next-step" @click="confirm">
-      <svg t="1693563911317" class="icon" viewBox="0 0 1264 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
-        p-id="7294" width="200" height="200">
-        <path
-          d="M1250.057513 473.992162L794.480863 15.313483a50.054101 50.054101 0 0 0-72.069473 0l-72.00924 73.394612a52.22251 52.22251 0 0 0 0 73.213911l246.716726 247.680464H52.674262C23.551328 409.60247 0 432.491228 0 460.801009v102.397079c0 28.309781 23.551328 51.198539 52.704379 51.198539h841.613636l-246.837193 247.740697a52.342977 52.342977 0 0 0 0 73.304261l72.039356 73.424729c19.78673 20.178248 52.102043 20.178248 72.069474 0l458.467861-461.47954a52.824846 52.824846 0 0 0 0-73.394612"
-          fill="" p-id="7295"></path>
-      </svg>
+    <div v-if="!confirmDisabled" class="manager__foot">
+      <div @click="removeAll" class="btn btn-normal">清空</div>
     </div>
     <Teleport to="body">
       <div class="image-delete" :style="{ display: deleteAreaDisplay }" @mouseup="removeImage" @touchend="removeImage">
@@ -51,18 +54,26 @@
   </div>
 </template>
 <script setup lang="ts">
+import type { ComputedRef, Ref } from 'vue';
+
 import { CSSProperties, computed, onMounted, ref, watch } from 'vue';
 import { useResizeObserver } from '@vueuse/core'
 import ImageViewManager from './class/base/ImageClipViewManager';
 import Tip from './components/Tip'
 
-import type { ComputedRef, Ref } from 'vue';
+import { useStore } from './stores'
+import { useRouter } from 'vue-router';
+
+const store = useStore()
+const router = useRouter()
+
 
 /** image file manager */
 type ImageOuter = {
   id: number,
   order: number,
   url: string,
+  isDraging: boolean,
   translateX: number,
   translateY: number,
   style: {
@@ -89,6 +100,11 @@ function dropImage(e: DragEvent) {
   const files: FileList = e.dataTransfer?.files!
   if (!_boforeAddImage(files)) return e.preventDefault()
   _addImage(files)
+}
+
+function removeAll() {
+  imageList.value = []
+  _updateDisplacement(true)
 }
 
 function removeImage() {
@@ -120,31 +136,34 @@ function _afterRemove(removedImage: ImageOuter) {
 function _addImage(files: FileList) {
   const cnt = imageList.value.length
   if (files?.length! > maxCnt - cnt) return
-  imageList.value.push(...Array.prototype.map.call<FileList, any[], ImageOuter[]>(
+  const images = Array.prototype.map.call<FileList, any[], ImageOuter[]>(
     files!, (m: File, i: number) => ({
       url: URL.createObjectURL(m),
       id: idCnt++,
       order: i + cnt,
       translateX: 0,
       translateY: 0,
+      isDraging: false,
       style: {
         transition: '200ms ease-out',
         zIndex: 0
       },
-    })));
+    })).reverse()
+  imageList.value.push(...images);
   _updateDisplacement(true)
 }
 
 const confirmDisabled = computed(() => imageList.value.length < 2)
-const emits = defineEmits(['updateImages'])
 
-function confirm() {
+function toStitch() {
   if (confirmDisabled.value) return
   const sortedFiles = imageList.value
     .sort((a, b) => a.order - b.order)
     .map(img => img.url)
   imageManager.initViews(sortedFiles).then(views => {
-    emits('updateImages', views)
+    // emits('updateImages', views)
+    store.imageClipViews = views
+    router.push({ name: 'work' })
   });
 }
 
@@ -164,6 +183,7 @@ function dragStart(e: MouseEvent | Touch, image: ImageOuter) {
   _updateAddPosition()
   isDraging.value = true
   draggingImage = image
+  image.isDraging = true
   _updateStyle()
   draggingItemDynamicOrder.value = image.order
 
@@ -186,6 +206,8 @@ function dragend() {
       draggingImage.translateX,
       draggingImage.translateY
     ] = _getDisplacementByOrder(draggingImage.order)
+    draggingImage.isDraging = false
+    draggingImage.style.transition = '200ms ease-out'
   }
   isDraging.value = false
 }
@@ -323,32 +345,32 @@ function touchEnd() {
 
 
 </script>
+<style>
+.app-name {
+  font-weight: bold;
+}
+</style>
 <style scoped>
-.image-manager {
+.body.image-manager {
   min-height: 100%;
+  padding: 0 20px;
 }
 
 #selector {
   display: none;
 }
 
-.next-step {
-  cursor: pointer;
+.manager__foot {
   display: flex;
   justify-content: center;
   align-items: center;
   margin: 0 auto;
-  width: 60px;
-  height: 60px;
-  background-color: var(--active-color);
-  border-radius: 50%;
-  box-shadow: 1px 2px 12px 2px rgba(0, 0, 0, 0.3), 1px 2px 6px 1px rgba(0, 0, 0, 0.4)
 }
 
-.next-step .icon {
-  height: 50%;
-  fill: #fff;
+.clear-all {
+  cursor: pointer;
 }
+
 
 .image-manager .image-list {
   display: flex;
@@ -377,7 +399,6 @@ function touchEnd() {
   display: block;
   object-fit: cover;
   object-position: center center;
-  box-shadow: 4px 4px 13px 1px rgba(0, 0, 0, 0.4);
 }
 
 .image-manager .image-add {
@@ -388,8 +409,7 @@ function touchEnd() {
   align-items: center;
   box-sizing: border-box;
   cursor: pointer;
-  border: 1px dashed #555;
-  background-color: #eaeaeac8;
+  background-color: #f7f7f7;
 }
 
 .image-manager .image-add--disabled {
@@ -399,7 +419,7 @@ function touchEnd() {
 }
 
 .image-manager .image-add--disabled .image-add-icon {
-  fill: rgba(100, 100, 100, 0.3);
+  fill: #707070;
 }
 
 .image-manager .image-outer:active {
@@ -435,8 +455,8 @@ function touchEnd() {
   }
 
   .image-manager .image-outer {
-    width: 33vw;
-    height: 33vw;
+    width: calc((100vw - 40px) / 3);
+    height: calc((100vw - 40px) / 3);
   }
 }
 

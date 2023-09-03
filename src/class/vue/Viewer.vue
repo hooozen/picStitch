@@ -25,6 +25,10 @@ const imageSeparators: Ref<ImageSeparator[]> = ref([])
 
 onMounted(() => {
   canvas.init(canvasEl.value)
+  if (imageClipViews.value.length < 1) return
+  canvas.setCanvasViewsFromClipView(imageClipViews.value)
+  canvas.draw()
+  setImageSeparators()
 })
 
 watchEffect(() => {
@@ -56,7 +60,7 @@ function update() {
 }
 
 function save() {
-  canvas.save()
+  return canvas.save()
 }
 
 defineExpose({ update, save })
@@ -66,7 +70,7 @@ defineExpose({ update, save })
 <style>
 .viewer-canvas-outer {
   margin: 20px auto;
-  max-width: 600px;
+  width: 100%;
   position: relative;
 }
 
