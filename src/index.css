@@ -62,12 +62,6 @@ body {
   height: 100%;
 }
 
-body {
-  /*
-  background: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' height='64px' width='64px'%3E %3Crect x='0' y='0' height='32' width='32' fill='%23ccc' /%3E %3Crect x='32' y='0' height='32' width='32' fill='%23f0f0f0' /%3E %3Crect x='32' y='32' height='32' width='32' fill='%23ccc' /%3E %3Crect x='0' y='32' height='32' width='32' fill='%23f0f0f0' /%3E %3C/svg%3E") center center;
-  */
-}
-
 #app {
   margin: 0 auto;
   box-sizing: border-box;
