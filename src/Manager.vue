@@ -455,8 +455,8 @@ function touchEnd() {
   }
 
   .image-manager .image-outer {
-    width: calc((100vw - 40px) / 3);
-    height: calc((100vw - 40px) / 3);
+    width: calc((100vw - 43px) / 3);
+    height: calc((100vw - 43px) / 3);
   }
 }
 
