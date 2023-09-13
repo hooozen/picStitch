@@ -23,7 +23,11 @@
   </editor>
   <div v-if="isShowResult" class="modal-mask" @click="isShowResult = false">
     <div class="modal__head">
-      <div class="modal-tip">长按或右击图片保存</div>
+      <!-- <div class="modal-tip">长按或右击图片保存</div> -->
+      <div class="modal__head-btns">
+        <div> </div>
+        <a @click.stop="" ref="saveBtn" download="picStitch.png" type="image/png" class="btn">保存</a>
+      </div>
     </div>
     <div class="result-view">
       <img @load="resultLoad" class="result-image" ref="resultImg" :src="resultURL" @click.stop="">
@@ -74,15 +78,18 @@ function confirmEdit() {
 }
 
 const saveEnabled = computed(() => imageClipViews.length > 0)
-const resultImg = ref<HTMLImageElement>()
 
 let loading: LoadingHandler
+const saveBtn = ref<HTMLAnchorElement>()
 function complete() {
   if (!saveEnabled.value) return
   loading = Loading({ text: '生成中' })
-  viewer!.value!.save().then((blob: Blob) => {
-    resultURL.value = URL.createObjectURL(blob)
-    isShowResult.value = true
+  isShowResult.value = true
+  viewer!.value!.save().then((res: string) => {
+    // const url = URL.createObjectURL(res)
+    // resultURL.value = url
+    resultURL.value = res
+    saveBtn.value!.href = res
   })
 }
 
@@ -103,6 +110,13 @@ function back() {
 <style>
 .body.image-work {
   overflow-y: auto;
+}
+
+.modal__head-btns {
+  width: 100%;
+  justify-content: space-between;
+  display: flex;
+  padding: 20px 20px 0;
 }
 
 .result-view {

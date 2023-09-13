@@ -22,6 +22,7 @@
   cursor: pointer;
   box-sizing: border-box;
   display: flex;
+  max-width: max-content;
   align-items: center;
   padding: 0.25em 0.75em;
   background: var(--active-color);
@@ -143,6 +144,7 @@ body {
   flex: 40px 0 0;
   height: 40px;
   align-items: center;
+  width: 100%;
   color: #ffffff;
 }
 

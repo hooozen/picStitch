@@ -47,10 +47,21 @@ export default class PicStitchCanvas {
   save(
     type: string = "image/png",
     quality: number = 0.9
-  ): Promise<Blob | null> | void {
+  ): Promise<string | ArrayBuffer | null> | void {
     if (this.ctx === null) return console.warn("init is required before save!");
     return new Promise((resolve, _) => {
-      this.canvas!.toBlob(resolve, type, quality);
+      this.canvas!.toBlob(
+        // resolve,
+        (blob: Blob | null) => {
+          var reader = new FileReader();
+          reader.onload = function () {
+            resolve(reader.result);
+          };
+          reader.readAsDataURL(blob!);
+        },
+        type,
+        quality
+      );
     });
   }
 
