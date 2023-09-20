@@ -55,11 +55,13 @@
 </template>
 <script setup lang="ts">
 import type { ComputedRef, Ref } from 'vue';
+import Compressor from 'compressorjs'
 
 import { CSSProperties, computed, onMounted, ref, watch } from 'vue';
 import { useResizeObserver } from '@vueuse/core'
 import ImageViewManager from './class/base/ImageClipViewManager';
 import Tip from './components/Tip'
+import Loading from './components/Loading'
 
 import { useStore } from './stores'
 import { useRouter } from 'vue-router';
@@ -133,24 +135,48 @@ function _afterRemove(removedImage: ImageOuter) {
   _updateDisplacement(true)
 }
 
+function _compressImages(files: FileList, maxWidth: number = 1080) {
+  const tasks = Array.prototype.map.call<FileList, any, (File | Blob)[]>(files, (file: File) => new Promise<File | Blob>((resolve, reject) => {
+    new Compressor(file, {
+      maxWidth,
+      success(result: File | Blob) {
+        resolve(result)
+      },
+      error(err) {
+        console.error(err.message);
+        reject(err)
+      },
+    })
+  }))
+  return Promise.all<(File | Blob)[]>(tasks)
+}
+
 function _addImage(files: FileList) {
   const cnt = imageList.value.length
   if (files?.length! > maxCnt - cnt) return
-  const images = Array.prototype.map.call<FileList, any[], ImageOuter[]>(
-    files!, (m: File, i: number) => ({
-      url: URL.createObjectURL(m),
-      id: idCnt++,
-      order: i + cnt,
-      translateX: 0,
-      translateY: 0,
-      isDraging: false,
-      style: {
-        transition: '200ms ease-out',
-        zIndex: 0
-      },
-    })).reverse()
-  imageList.value.push(...images);
-  _updateDisplacement(true)
+  let loading = Loading({ text: '载入中' })
+  _compressImages(files).then((files: (File | Blob)[]) => {
+    // const images = Array.prototype.map.call<FileList, any[], ImageOuter[]>(
+    const images = files.map(
+      (m: File | Blob, i: number) => ({
+        url: URL.createObjectURL(m),
+        id: idCnt++,
+        order: i + cnt,
+        translateX: 0,
+        translateY: 0,
+        isDraging: false,
+        style: {
+          transition: '200ms ease-out',
+          zIndex: 0
+        },
+      })).reverse()
+    imageList.value.push(...images);
+    _updateDisplacement(true)
+  }).catch(() => {
+    Tip({ text: '图片加载失败，请重试' })
+  }).finally(() => {
+    loading.close()
+  })
 }
 
 const confirmDisabled = computed(() => imageList.value.length < 2)
